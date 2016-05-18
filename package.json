@@ -33,9 +33,7 @@
     "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
-    "test": "mocha test/*.test.js",
-    "build": "webpack --progress --colors --watch --config webpack/webpack.dev.config.js",
-    "deploy": "NODE_ENV=production webpack -p --display-error-details --config webpack/webpack.depoly.config.js"
+    "test": "mocha test/*.test.js"
   },
   "author": "ShiningRay",
   "license": "MIT",
