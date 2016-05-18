@@ -1,4 +1,4 @@
-import {EventEmitter} from 'events';
+import { EventEmitter } from 'events';
 import * as URL from 'url';
 import {RootModel} from './models';
 /**

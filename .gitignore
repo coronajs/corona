@@ -31,3 +31,12 @@ node_modules
 
 # Optional REPL history
 .node_repl_history
+
+# Webpack
+dist/
+build/
+
+# Typescript
+tsdist/
+jsconfig.json
+typings/

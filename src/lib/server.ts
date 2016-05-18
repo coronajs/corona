@@ -1,4 +1,4 @@
-import * as RouteRecognizer from 'route-recognizer'
+import { RouteRecognizer } from 'route-recognizer'
 import * as URL from 'url'
 
 export class Server {

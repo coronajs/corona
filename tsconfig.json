@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "outDir": "./tsdist/",
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "module": "commonjs",
+        "target": "es5",
+        "jsx": "react",
+        "experimentalDecorators": true
+    },
+    "exclude": [
+        "node_modules",
+        "typings/main",
+        "typings/main.d.ts",
+        "typings_d/main.d.ts"
+    ]
+}
