@@ -1,19 +1,22 @@
 type Query = Array<any>;
+
 /**
  * database adapter interface for retrieve entities
  */
 export interface IAdapter<T> {
-  get(key:string):T;
-  set(key:string, value:T):this;
-  create(record:T);
-  insert(records:T[]);
-  find(query):T[];
-  delete(query);
+//   get(key:string):T;
+//   set(key:string, value:T):this;
+  create(record:T):PromiseLike<boolean>;
+  insert(records:T[]):PromiseLike<boolean>;
+  find(query):PromiseLike<T[]>;
+  findOne(query):PromiseLike<T>;
+  save(record:T):PromiseLike<boolean>;
+  delete(query):boolean;
 }
 
 export class Adapter {
   get(key:string){
-    
+     
   }
 }
 
