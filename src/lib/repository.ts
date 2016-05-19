@@ -8,15 +8,16 @@ import {IAdapter} from './adapter'
  */
 export class Repository<E, T extends Model<E> > extends EventEmitter {
   private adapter:IAdapter<E>;
-  private identityMap:Map = new Map();
+  private identityMap:{[id:string]:E}={};
+  public factory:(entity:E) => T;
   constructor(){
     super();
     this.adapter = null
   }
 
   get(key:string):T{
-    // if(this.identityMap)
-    return new T(this.adapter.get(key));
+    // if(this.identityMap[key]) return this.identityMap[key];
+    return this.factory(this.adapter.get(key));
   }
 
   set(key:string, value:T){

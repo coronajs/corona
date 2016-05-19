@@ -33,7 +33,9 @@
     "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
-    "test": "mocha test/*.test.js"
+    "test": "mocha test/*.test.js",
+    "dev": "tsc -w",
+    "build": "tsc"
   },
   "author": "ShiningRay",
   "license": "MIT",
