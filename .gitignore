@@ -39,4 +39,3 @@ build/
 # Typescript
 tsdist/
 jsconfig.json
-typings/

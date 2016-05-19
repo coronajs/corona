@@ -9,6 +9,7 @@ export interface IAdapter<T> {
   create(record:T):PromiseLike<boolean>;
   insert(records:T[]):PromiseLike<boolean>;
   find(query):PromiseLike<T[]>;
+  findOne(query):PromiseLike<T>;
   save(record:T):PromiseLike<boolean>;
   delete(query):boolean;
 }

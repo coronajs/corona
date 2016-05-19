@@ -15,14 +15,15 @@ export class Repository<E, T extends Model<E> > extends EventEmitter {
     this.adapter = null
   }
 
-  get(key:string):T{
+  get(key:string):PromiseLike<T>{
     // if(this.identityMap[key]) return this.identityMap[key];
-    return this.factory(this.adapter.get(key));
+    return this.adapter.findOne(key).then((entity) => this.factory(entity));
   }
 
-  set(key:string, value:T){
+  set(key:string, value:T):PromiseLike<boolean>{
     // if(changes){
       this.emit('update', key, value);
+    return this.adapter.save(value.valueOf());
     // }
   }
 
