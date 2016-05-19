@@ -1,10 +1,12 @@
 import { RouteRecognizer } from 'route-recognizer'
+import {Controller} from './controller'
 import * as URL from 'url'
-
+// import * as server from 'socket.io'
 export class Server {
-  constructor(io, routes){
+  private router: RouteRecognizer<Controller>;
+  constructor(private io:SocketIO.Server, routes:any){
     this.io = io;
-    this.router = new RouteRecognizer();
+    this.router = new RouteRecognizer<Controller>();
     if(routes){
       var routesconfig = Object.keys(routes).map(function(i){
         return {path: i, handler: routes[i]};
@@ -16,11 +18,11 @@ export class Server {
     this.io.on('connection', this.handleConnection.bind(this))
   }
 
-  route(path, ctrl){
+  route(path:string, ctrl:Controller){
     this.router.add([{path: path, handler: ctrl}])
   }
 
-  handleConnection(connection){
+  handleConnection(connection:SocketIO.Socket){
     var url = URL.parse(connection.handshake.url, true);
     var result = this.router.recognize(url.path);
     if(result.length > 0){
