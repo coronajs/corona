@@ -18,4 +18,6 @@ export class Slice<T> implements ArrayLike<T> {
     toString():string {
         return this.valueOf().toString();
     }
+    
+    [n: number]: T
 }
