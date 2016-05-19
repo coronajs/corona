@@ -1,40 +1,35 @@
+import {EventEmitter} from 'events'
+import {Model} from './model'
+import {IAdapter} from './adapter'
 
-export class Adapter {
-
-}
-
-export class RedisAdapter extends RepositoryAdapter {
-  constructor(){
-    this.redis = null;
-  }
-}
 
 /**
- * get and set models
+ * Repository is used for storing and retrieving Models
  */
-export class Repository/*<Model>*/ extends EventEmitter {
+export class Repository<E, T extends Model<E> > extends EventEmitter {
+  private adapter:IAdapter<E>;
+  private identityMap:Map = new Map();
   constructor(){
     super();
     this.adapter = null
-    this.identityMap = new Map();
   }
 
-  get(key)/*:Model*/{
-    if(this.identityMap)
-    /* return new Model(this.adapter.get(key)) */
+  get(key:string):T{
+    // if(this.identityMap)
+    return new T(this.adapter.get(key));
   }
 
-  set(key, value/*:Model*/){
-    if(changes){
+  set(key:string, value:T){
+    // if(changes){
       this.emit('update', key, value);
-    }
+    // }
   }
 
-  remove(key){
+  remove(key:string){
     this.emit("delete", key)
   }
 
-  fetch(key, missing)/*:Model*/{
+  fetch(key:string, missing:() => T):T{
     var value = this.get(key);
     if(!value){
       value = missing();
@@ -42,4 +37,19 @@ export class Repository/*<Model>*/ extends EventEmitter {
     }
     return value;
   }
+}
+
+
+/**
+ *
+ */
+class DictRepository {
+
+}
+
+/**
+ *
+ */
+class TableRepository {
+
 }

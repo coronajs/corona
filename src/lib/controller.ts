@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import * as URL from 'url';
-import {RootModel} from './models';
+
+import {Model} from './model';
 /**
  * controller acts as a facade which resolves all the request from clients(in rpc mode)
  * and interact with other objects
@@ -8,24 +9,26 @@ import {RootModel} from './models';
 export class Controller extends EventEmitter {
 	// private socket;
 	// MAYBE we should move __handleXXX function outside controller to achieve the ability of controller behavior change
-	constructor(socket) {
+	private url: any;
+	private params: any;
+	private syncConfig: any;
+
+	constructor(private socket: SocketIO.Socket) {
 		super();
 		this.socket = socket;
 		this.url = URL.parse(socket.handshake.url, true);
 		this.params = this.url.query;
-		this.data = new RootModel({});
 		socket.on('rpc:invoke',
 			this.__handleCall.bind(this)
 		).on('cast',
 			this.__handleCast.bind(this)
-		).on('subscribe',
+			).on('subscribe',
 			this.subscribe.bind(this)
-		).on('disconnect', this.onexit.bind(this))
+			).on('disconnect', this.onexit.bind(this))
 		this.syncConfig = {};
 		this.init(this.params);
 		this.startSync();
 		socket.emit('initialized'); // tell client we are ready
-
 	}
 
 	/**
@@ -33,26 +36,26 @@ export class Controller extends EventEmitter {
    * override by subclass to do initialization
    * @params params any extracted from url
    */
-	init(params) {
+	init(params: any) {
 
 	}
 
 	/**
 	 * which part of data should corona send to client?
 	 */
-	sync(config){
+	sync(config: any) {
 		this.syncConfig = config;
 	}
 
 	/**
 	 */
-	startSync(){
+	startSync() {
 
 	}
 
-	__handleCall(method, reqId, args) {
+	__handleCall(method: string, reqId: number, args: any[]) {
 		if (typeof this[method] === 'function') {
-			if(!(args instanceof Array)){
+			if (!(args instanceof Array)) {
 				args = [args]
 			}
 			try {
@@ -64,9 +67,9 @@ export class Controller extends EventEmitter {
 
 			if (res && (typeof res.then === 'function')) {
 				res.then(
-					(data) => this.socket.emit('rpc:result', reqId, data)
+					(data: any) => this.socket.emit('rpc:result', reqId, data)
 				).catch(
-					(err) => this.socket.emit('rpc:error', reqId, err)
+					(err: Error) => this.socket.emit('rpc:error', reqId, err)
 					)
 			} else {
 				this.socket.emit('rpc:result', reqId, res)
@@ -76,7 +79,7 @@ export class Controller extends EventEmitter {
 		}
 	}
 
-	__handleCast(method, args) {
+	__handleCast(method: string, args: any[]) {
 		if (typeof this[method] === 'function') {
 			this[method].apply(this, args);
 		}
@@ -86,9 +89,9 @@ export class Controller extends EventEmitter {
 	/**
    * client ask to subscribe to one of certain object's events
    */
-	subscribe(objid, event) {
+	subscribe(objid: string, event: string) {
 		var self = this;
-		this[objid].on(event, function (...args) {
+		this[objid].on(event, function (...args: any[]) {
 			self.socket.emit('event', objid, event, args);
 		});
 	}
@@ -105,8 +108,8 @@ export class Controller extends EventEmitter {
    * to close connection and quit
    */
 	exit() {
-    this.onexit();
-    this.socket.close();
+		this.onexit();
+		this.socket.disconnect();
 		this.emit('exit')
 		delete this.socket;
 	}
