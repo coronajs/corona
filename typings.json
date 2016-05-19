@@ -5,7 +5,10 @@
     "es6-promise": "registry:npm/es6-promise#3.0.0+20160211003958"
   },
   "ambientDependencies": {
-    "node": "registry:dt/node#6.0.0+20160514165920"
+    "node": "registry:dt/node#6.0.0+20160514165920",
+    "route-recognizer": "registry:dt/route-recognizer#0.0.0+20160316155526",
+    "socket.io": "registry:dt/socket.io#1.4.4+20160317120654",
+    "socket.io-client": "registry:dt/socket.io-client#1.4.4+20160317120654"
   },
   "globalDependencies": {
     "socket.io": "registry:dt/socket.io#1.4.4+20160317120654"
