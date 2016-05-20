@@ -9,6 +9,7 @@ import {IAdapter} from './adapter'
  * T Model type
  */
 export class Repository<E, T extends Model<E>> extends EventEmitter {
+
   /**
    * keep models in memory and unique
    */
@@ -22,9 +23,11 @@ export class Repository<E, T extends Model<E>> extends EventEmitter {
    * retrieve a model
    */
   get(key: any): PromiseLike<T> {
+
     // if(this.identityMap[key]) return Promise.resolve(this.identityMap[key]);
     return this.adapter.findOne(key).then((entity) => this.factory(entity));
   }
+
 
   /**
    * store a model
