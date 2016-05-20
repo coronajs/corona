@@ -4,10 +4,29 @@ type Query = Array<any>;
  * database adapter interface for retrieve entities
  */
 export interface IAdapter<T> {
-  create(record:T):PromiseLike<boolean>;
-  insert(records:T[]):PromiseLike<boolean>;
-  find(query):PromiseLike<T[]>;
-  findOne(query):PromiseLike<T>;
-  save(record:T):PromiseLike<boolean>;
+  /**
+   * insert a record
+   */
+  insert(record:T):PromiseLike<T>;
+  /**
+   * 
+   */
+  count(query, options?):PromiseLike<number>;
+  // bulkInsert(record:T[]):PromiseLike<T[]>;
+  /**
+   * find out all the matched records
+   */
+  find(query, option?):PromiseLike<T[]>;
+  /**
+   * find the first matched record
+   */
+  findOne(query, option?):PromiseLike<T>;
+  /**
+   * update all the matched records
+   */
+  update(query, operations, options?):PromiseLike<boolean>;
+  /**
+   * remove all the matched records
+   */
   remove(query, options?):PromiseLike<number>;
 }

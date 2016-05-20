@@ -10,5 +10,12 @@
   "globalDependencies": {
     "route-recognizer": "github:DefinitelyTyped/DefinitelyTyped/route-recognizer/route-recognizer.d.ts",
     "socket.io": "registry:dt/socket.io#1.4.4+20160317120654"
+  },
+  "devDependencies": {
+    "chai": "registry:npm/chai#3.5.0+20160415060238",
+    "sinon": "registry:npm/sinon#1.16.0+20160427193336"
+  },
+  "globalDevDependencies": {
+    "mocha": "registry:dt/mocha#2.2.5+20160317120654"
   }
 }
