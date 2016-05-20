@@ -1,5 +1,5 @@
 'use strict'
-var Server = require('../tsdist/lib/server').Server;
+var Server = require('../tsdist/src/lib/server').Server;
 var sinon = require('sinon')
 var EventEmitter = require('events').EventEmitter
 var io = new EventEmitter();
