@@ -59,6 +59,10 @@ export class Model<T> extends EventEmitter {
   get id(){
     return this.data.id;
   }
+  
+  dispose(){
+    this.emit('dispose');
+  }
 }
 
 // export type BaseModel = Model<any>

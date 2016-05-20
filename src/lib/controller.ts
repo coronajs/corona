@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import * as URL from 'url';
+import * as _ from 'lodash';
 
 import {Model} from './model/model';
 /**
@@ -9,11 +10,12 @@ import {Model} from './model/model';
 export class Controller extends EventEmitter {
 	// private socket;
 	// MAYBE we should move __handleXXX function outside controller to achieve the ability of controller behavior change
-	private url: any;
-	private params: any;
+	protected url: any;
+	protected params: any;
 	private syncConfig: any;
+	private exposedMethods: string[] = [];
 
-	constructor(private socket: SocketIO.Socket) {
+	constructor(protected socket: SocketIO.Socket) {
 		super();
 		this.socket = socket;
 		this.url = URL.parse(socket.handshake.url, true);
@@ -28,6 +30,7 @@ export class Controller extends EventEmitter {
 		this.syncConfig = {};
 		this.init(this.params);
 		this.startSync();
+		socket.emit('meta:methods', this.exposedMethods);
 		socket.emit('initialized'); // tell client we are ready
 	}
 
@@ -45,6 +48,13 @@ export class Controller extends EventEmitter {
 	 */
 	sync(config: any) {
 		this.syncConfig = config;
+	}
+	
+	/**
+	 * 
+	 */
+	expose(...methods:string[]){
+		this.exposedMethods.concat(_.flatten(methods));
 	}
 
 	/**
