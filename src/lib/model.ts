@@ -76,7 +76,7 @@ export class ArrayModel<ElementType, ModelType extends Model<ElementType>> exten
 
   push(element: ModelType): number {
     this.emit('push', element);
-    this.emit('update', 'length', this.data.push(element));
+    this.emit('update', 'length', this.data.length);
     return this.data.length;
   }
 
