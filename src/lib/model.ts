@@ -3,12 +3,13 @@ import * as _ from 'lodash'
 /**
  * Models wraps entity object and provides extra events and syncing behavior
  */
-export class Model <T> extends EventEmitter {
+export class Model<T> extends EventEmitter {
   protected data: T;
   private key: string;
   private children: Array<Model<any>>;
   private parent: Model<any>;
   private root: Model<any>;
+  
   constructor(data:T, key?:string, parent?:Model<any>){
     super();
     this.data = data;
@@ -18,15 +19,32 @@ export class Model <T> extends EventEmitter {
     this.root = parent.root;
   }
 
-  get(key:string):any{
-
+  /**
+   * return a copy of specific keypath
+   */
+  get(keypath:string):any{
+    return
+  }
+  
+  /**
+   * return a new model which corresponding keypath 
+   */
+  getModel(keypath:string):Model<any>{
+    return
   }
 
-  set(key:string, value:any){
+  /**
+   * set value
+   */
+  set(keypath:string, value:any){
 
   }
-
-  fetch(key:string, missing: () => any){
+  
+  /**
+   * retrieve value, and if not exists then invoke callback to calculate value
+   * and save to the keypath
+   */
+  fetch(keypath:string, missing: () => any){
 
   }
 
@@ -37,6 +55,10 @@ export class Model <T> extends EventEmitter {
   toString():string{
     return this.data.toString();
   }
+  
+  get id(){
+    return this.data.id;
+  }
 }
 
 // export type BaseModel = Model<any>
@@ -45,11 +67,11 @@ export class Model <T> extends EventEmitter {
  * ArrayModel represent a list of model object
  * this will emit length change events
  */
-export class ArrayModel<ElementType, ModelType extends Model<ElementType>> extends Model<Array<ElementType>>{
+export class ArrayModel<ElementType, ModelType extends Model<ElementType>> extends Model<Array<ModelType>>{
   /*
    */
-  constructor(data: Array<ElementType> ){
-    super(data);
+  constructor(data: Array<ElementType>, private modelContructor: new(data:ElementType) => ModelType){
+    super(data.map(e => new modelContructor(e)));
   }
 
   push(element: ModelType): number {
@@ -92,6 +114,11 @@ export class ArrayModel<ElementType, ModelType extends Model<ElementType>> exten
   }
 }
 
+export class ChildModel<T> extends Model<T> {
+  constructor(data:T){
+    super(data);
+  }
+}
 
 /**
  *

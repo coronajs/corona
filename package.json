@@ -27,9 +27,10 @@
   "scripts": {
     "test": "mocha test/*.test.js",
     "dev": "tsc -w",
-    "build": "tsc"
+    "build": "tsc -d"
   },
   "author": "ShiningRay",
+  "typings": "./tsdist/index.d.ts",
   "license": "MIT",
   "repository": "https://github.com/coronajs/corona"
 }
