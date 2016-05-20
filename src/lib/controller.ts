@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import * as URL from 'url';
 
-import {Model} from './model';
+import {Model} from './model/model';
 /**
  * controller acts as a facade which resolves all the request from clients(in rpc mode)
  * and interact with other objects

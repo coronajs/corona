@@ -1,5 +1,5 @@
 import {EventEmitter} from 'events'
-import {Model} from './model'
+import {Model} from './model/model'
 import {IAdapter} from './adapter'
 
 
