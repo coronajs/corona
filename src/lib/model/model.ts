@@ -1,68 +1,66 @@
 import {EventEmitter} from 'events';
 import * as _ from 'lodash'
+import { BaseModel } from './baseModel'
+import { ChildModel } from './childModel'
+import { IEntity } from './../entity/entity'
 /**
  * Models wraps entity object and provides extra events and syncing behavior
  */
-export class Model<T> extends EventEmitter {
-  protected data: T;
-  private key: string;
-  private children: Array<Model<any>>;
-  private parent: Model<any>;
-  private root: Model<any>;
-  
-  constructor(data:T, key?:string, parent?:Model<any>){
-    super();
-    this.data = data;
-    this.key = key;
-    this.children = [];
-    this.parent = parent;
-    this.root = parent.root;
-  }
+export class Model<T extends IEntity> extends BaseModel<T> {
 
+  constructor(data: T, key?: string, parent?: Model<any>) {
+    super(data, key, parent);
+  }
+  
   /**
    * return a copy of specific keypath
    */
-  get(keypath:string):any{
-    return
+  get(keypath: string = ''): any {
+    if (keypath == '') {
+      return _.clone(this.data);
+    }
+    let keypaths = keypath.split('.');
+    let ret: any = this.data;
+    for (var i = 0; i < keypaths.length; i++) {
+      keypath = keypaths[i];
+      if (ret.hasOwnProperty(keypath)) {
+        ret = ret[keypath];
+      } else {
+        return undefined;
+      }
+    }
+    return _.clone(ret);
   }
-  
+
   /**
-   * return a new model which corresponding keypath 
+   * return a new child model which corresponding keypath 
    */
-  getModel(keypath:string):Model<any>{
-    return
+  getModel(keypath: string = ''): ChildModel<any> {
+    if (keypath == '') {
+      return this;
+    }
+    let data = this.get(keypath);
+    if (data != undefined) {
+      return new ChildModel<typeof data>(keypath, this);
+    }
+    return null;
   }
 
   /**
    * set value
    */
-  set(keypath:string, value:any){
+  set(keypath: string, value: any) {
 
   }
-  
+
   /**
    * retrieve value, and if not exists then invoke callback to calculate value
    * and save to the keypath
    */
-  fetch(keypath:string, missing: () => any){
+  fetch(keypath: string, missing: () => any) {
 
   }
 
-  valueOf():T{
-    return _.clone(this.data);
-  }
-
-  toString():string{
-    return this.data.toString();
-  }
-  
-  get id(){
-    return this.data.id;
-  }
-  
-  dispose(){
-    this.emit('dispose');
-  }
 }
 
 // export type BaseModel = Model<any>
