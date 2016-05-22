@@ -15,7 +15,10 @@ export class Model<T extends IEntity> extends BaseModel<T> {
   /**
    * return a copy of specific keypath
    */
-  get(keypath: string): any {
+  get(keypath: string = ''): any {
+    if (keypath == '') {
+      return _.clone(this.data);
+    }
     let keypaths = keypath.split('.');
     let ret: any = this.data;
     for (var i = 0; i < keypaths.length; i++) {
@@ -32,7 +35,10 @@ export class Model<T extends IEntity> extends BaseModel<T> {
   /**
    * return a new child model which corresponding keypath 
    */
-  getModel(keypath: string): ChildModel<any> {
+  getModel(keypath: string = ''): ChildModel<any> {
+    if (keypath == '') {
+      return this;
+    }
     let data = this.get(keypath);
     if (data != undefined) {
       return new ChildModel<typeof data>(keypath, this);

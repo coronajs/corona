@@ -10,14 +10,20 @@ export class ChildModel<T extends IEntity> extends BaseModel<T> {
   /**
    * return a copy of specific keypath
    */
-  get(keypath: string): any {
+  get(keypath: string = ''): any {
+    if (keypath == '') {
+      return this.parent.get(this.key);
+    }
     return this.parent.get(this.key + '.' + keypath);
   }
   
   /**
    * return a new child model which corresponding keypath 
    */
-  getModel(keypath: string): ChildModel<any> {
+  getModel(keypath: string = ''): ChildModel<any> {
+    if (keypath == '') {
+      return this;
+    }
     let data = this.get(keypath);
     if (data != undefined) {
       return new ChildModel<typeof data>(keypath, this);

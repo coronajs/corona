@@ -45,6 +45,13 @@ describe('Model', function(){
     assert(ret['sth'] != data['child']['sth']);
     done();
   });
+  it('get data of model self', function(done){
+    var model = new Model(data);
+    var ret: any;
+    ret = model.get();
+    assert(ret['id'] == data['id']);
+    done();
+  });
 });
 describe('Child Model', function(){
   it('get child model', function(done){
@@ -74,6 +81,23 @@ describe('Child Model', function(){
     var child_child = child.getModel('child_child');
     var ret1 = model.get('child2.child_child.sth');
     var ret2 = child_child.get('sth');
+    assert(ret1 == ret2);
+    done();
+  });
+  it('get child model is a model self', function(done){
+    var model = new Model(data);
+    var self = model.getModel();
+    var ret1 = model.get('id');
+    var ret2 = self.get('id');
+    assert(ret1 == ret2);
+    done();
+  });
+  it('get child model is a child model self', function(done){
+    var model = new Model(data);
+    var child = model.getModel('child');
+    var self = child.getModel();
+    var ret1 = child.get('sth');
+    var ret2 = self.get('sth');
     assert(ret1 == ret2);
     done();
   });
