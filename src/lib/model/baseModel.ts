@@ -54,7 +54,7 @@ export class BaseModel<T> extends EventEmitter {
   }
 
   valueOf(): T {
-    return _.clone(this.data);
+    return _.cloneDeep(this.data);
   }
 
   toString(): string {
