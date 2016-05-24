@@ -1,8 +1,7 @@
 import * as _ from 'lodash'
 import { BaseModel } from './baseModel'
-import { IEntity } from './../entity/entity'
 
-export class ChildModel<T extends IEntity> extends BaseModel<T> {
+export class ChildModel<T> extends BaseModel<T> {
   constructor(key?: string, parent?: BaseModel<any>) {
     super(null, key, parent);
   }

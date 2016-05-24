@@ -1,7 +1,6 @@
 import {EventEmitter} from 'events'
 import {BaseModel} from './model/baseModel'
 import {IAdapter} from './adapter'
-import {IEntity} from './entity/entity'
 import * as Promise from 'bluebird';
 
 
@@ -10,7 +9,7 @@ import * as Promise from 'bluebird';
  * E entity type
  * T Model type
  */
-export class Repository<E extends IEntity, M extends BaseModel<E>> extends EventEmitter {
+export class Repository<E, M extends BaseModel<E>> extends EventEmitter {
 
   /**
    * keep models in memory and unique

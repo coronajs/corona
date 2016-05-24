@@ -1,5 +1,4 @@
 import {IAdapter} from '../../src/lib/adapter'
-import {IEntity} from '../../src/lib/entity/entity'
 import * as Promise from 'bluebird';
 
 export class FakeMemoryAdapter<T> implements IAdapter<T>{
