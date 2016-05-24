@@ -60,7 +60,7 @@ export class BaseModel<T extends IEntity> extends EventEmitter {
   }
 
   get id() {
-    return this.data.id;
+    return this.data.id();
   }
 
   dispose() {

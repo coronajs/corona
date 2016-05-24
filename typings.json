@@ -2,7 +2,7 @@
   "name": "corona",
   "version": false,
   "dependencies": {
-    "es6-promise": "registry:npm/es6-promise#3.0.0+20160211003958"
+    "bluebird": "registry:npm/bluebird#3.3.4+20160515010139"
   },
   "ambientDependencies": {
     "node": "registry:dt/node#6.0.0+20160514165920"

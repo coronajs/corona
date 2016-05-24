@@ -4,6 +4,7 @@
   "description": "a realtime framework built in nodejs",
   "main": "tsdist/index.js",
   "dependencies": {
+    "bluebird": "^3.4.0",
     "bunyan": "^1.5.1",
     "corona-client": "^0.0.1",
     "electrolyte": "^0.2.0",
