@@ -1,6 +1,7 @@
 import {EventEmitter} from 'events'
-import {Model} from './model/model'
+import {BaseModel} from './model/baseModel'
 import {IAdapter} from './adapter'
+import * as Promise from 'bluebird';
 
 
 /**
@@ -8,14 +9,17 @@ import {IAdapter} from './adapter'
  * E entity type
  * T Model type
  */
-export class Repository<E, T extends Model<E>> extends EventEmitter {
+export class Repository<E, M extends BaseModel<E>> extends EventEmitter {
 
   /**
    * keep models in memory and unique
    */
-  private identityMap: { [id: any]: E } = {};
-  
-  constructor(protected adapter: IAdapter<E>, public factory: (entity: E) => T) {
+  private identityMap: {
+    [id: string]: M,
+    [index: number]: M 
+  } = {};
+
+  constructor(protected adapter: IAdapter<E>, public factory: (entity: E) => M) {
     super();
   }
 
@@ -24,8 +28,8 @@ export class Repository<E, T extends Model<E>> extends EventEmitter {
    * if model exists in identity map then return from identity map
    * if model does not exist in identity map then create the model and store in identity map
    */
-  retrieve(key: any): PromiseLike<T> {
-    if(this.identityMap[key]){
+  retrieve(key: any): PromiseLike<M> {
+    if (this.identityMap[key]) {
       return Promise.resolve(this.identityMap[key]);
     } else {
       return this.adapter.findOne(key).then((entity) => {
@@ -40,7 +44,7 @@ export class Repository<E, T extends Model<E>> extends EventEmitter {
   /**
    * store a model
    */
-  store(model: T): PromiseLike<T> {
+  store(model: M): PromiseLike<M> {
     if (model.id) {
       return this.adapter.update({ _id: model.id }, model.valueOf()).then((data) => model);
     } else {
@@ -58,7 +62,7 @@ export class Repository<E, T extends Model<E>> extends EventEmitter {
     m.dispose();
   }
 
-  fetch(key: string, missing: () => T): PromiseLike<T> {
+  fetch(key: string, missing: () => M): PromiseLike<M> {
     return this.retrieve(key).then((value) => {
       if (!value) {
         value = missing();
@@ -67,7 +71,7 @@ export class Repository<E, T extends Model<E>> extends EventEmitter {
       return value;
     });
   }
-  
+
   /**
    * dispose
    */

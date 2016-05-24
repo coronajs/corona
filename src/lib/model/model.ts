@@ -2,11 +2,10 @@ import {EventEmitter} from 'events';
 import * as _ from 'lodash'
 import { BaseModel } from './baseModel'
 import { ChildModel } from './childModel'
-import { IEntity } from './../entity/entity'
 /**
  * Models wraps entity object and provides extra events and syncing behavior
  */
-export class Model<T extends IEntity> extends BaseModel<T> {
+export class Model<T> extends BaseModel<T> {
 
   constructor(data: T, key?: string, parent?: Model<any>) {
     super(data, key, parent);

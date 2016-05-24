@@ -1,13 +1,15 @@
 import { EventEmitter } from 'events';
-import { IEntity } from './../entity/entity'
 import * as _ from 'lodash'
 
-export class BaseModel<T extends IEntity> extends EventEmitter {
+export class BaseModel<T> extends EventEmitter {
   protected data: T;
   protected key: string;
   protected children: Array<BaseModel<any>>;
   protected parent: BaseModel<any>;
   protected root: BaseModel<any>;
+  protected presisted: boolean = true;
+  protected changed: boolean = false;
+  protected primaryKey: string | number = '_id';
   
   constructor(data: T, key?: string, parent?: BaseModel<any>) {
     super();
@@ -60,7 +62,7 @@ export class BaseModel<T extends IEntity> extends EventEmitter {
   }
 
   get id() {
-    return this.data.id;
+    return this.data[this.primaryKey];
   }
 
   dispose() {

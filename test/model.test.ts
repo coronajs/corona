@@ -5,7 +5,7 @@ import { EventEmitter } from 'events';
 import { assert } from 'chai';
 var io = new EventEmitter();
 var data = {
-  id: '1',
+  _id: '1',
   str_prop: 'string',
   num_prop: 1,
   bool_prop: false,
@@ -15,7 +15,10 @@ var data = {
   child2: {
     child_child: {
       sth: '__2__'
-    }
+    }   
+  },
+  id() {
+    return this._id;
   }
 }
 describe('Model', function(){
@@ -87,8 +90,8 @@ describe('Child Model', function(){
   it('get child model is a model self', function(done){
     var model = new Model(data);
     var self = model.getModel();
-    var ret1 = model.get('id');
-    var ret2 = self.get('id');
+    var ret1 = model.get('_id');
+    var ret2 = self.get('_id');
     assert(ret1 == ret2);
     done();
   });
