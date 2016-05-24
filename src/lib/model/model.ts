@@ -16,7 +16,7 @@ export class Model<T> extends BaseModel<T> {
    */
   get(keypath: string = ''): any {
     if (keypath == '') {
-      return _.clone(this.data);
+      return _.cloneDeep(this.data);
     }
     let keypaths = keypath.split('.');
     let ret: any = this.data;
@@ -28,7 +28,7 @@ export class Model<T> extends BaseModel<T> {
         return undefined;
       }
     }
-    return _.clone(ret);
+    return _.cloneDeep(ret);
   }
 
   /**

@@ -3,7 +3,7 @@
  */
 
 export interface IExam {
-  id: number,
+  id?: number,
   firstName: string,
   middleName: string,
   lastName: string,
@@ -20,5 +20,5 @@ export const TExam: IExam[] = [
   { id: 6, firstName: 'Michelangelo', middleName: 'di Lodovico', lastName: 'Buonarroti', sex: 'male', score: 93 },
   { id: 7, firstName: 'Jian', middleName: '', lastName: 'Ren', sex: 'female', score: 35 },
   { id: 8, firstName: 'Sola', middleName: '', lastName: 'Aoi', sex: 'male', score: 76 },
-  { id: 9, firstName: 'Tony', middleName: '', lastName: 'Stark', sex: 'male', score: 100 },
+  { id: 9, firstName: 'Tony', middleName: '', lastName: 'Stark', sex: 'male', score: 99 },
 ]
