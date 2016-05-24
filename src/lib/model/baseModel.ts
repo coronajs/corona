@@ -10,7 +10,7 @@ export class BaseModel<T> extends EventEmitter {
   protected presisted: boolean = true;
   protected changed: boolean = false;
   protected primaryKey: string | number = '_id';
-  
+
   constructor(data: T, key?: string, parent?: BaseModel<any>) {
     super();
     this.data = data;
@@ -23,7 +23,7 @@ export class BaseModel<T> extends EventEmitter {
       this.root = this;
     }
   }
-  
+
   /**
    * return a copy of specific keypath
    */
@@ -32,10 +32,10 @@ export class BaseModel<T> extends EventEmitter {
   }
 
   /**
-   * return a new child model which corresponding keypath 
+   * return a new child model which corresponding keypath
    */
   getModel(keypath: string): BaseModel<any> {
-    throw new Error('Not implemented'); 
+    throw new Error('Not implemented');
   }
 
   /**

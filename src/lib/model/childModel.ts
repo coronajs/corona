@@ -1,11 +1,11 @@
 import * as _ from 'lodash'
 import { BaseModel } from './baseModel'
 
-export class ChildModel<T> extends BaseModel<T> {
+export class ChildModel extends BaseModel<any> {
   constructor(key?: string, parent?: BaseModel<any>) {
     super(null, key, parent);
   }
-  
+
   /**
    * return a copy of specific keypath
    */
@@ -13,20 +13,27 @@ export class ChildModel<T> extends BaseModel<T> {
     if (keypath == '') {
       return this.parent.get(this.key);
     }
-    return this.parent.get(this.key + '.' + keypath);
+    return this.parent.get(this.joinKeypath(keypath) );
   }
-  
+
+  joinKeypath(path:string):string{
+    return `${this.key}.${path}`;
+  }
   /**
-   * return a new child model which corresponding keypath 
+   *
    */
-  getModel(keypath: string = ''): ChildModel<any> {
+  set(keypath: string, value: any): this {
+    this.parent.set(keypath, value);
+    return this;
+  }
+
+  /**
+   * return a new child model which corresponding keypath
+   */
+  getModel(keypath: string = ''): ChildModel {
     if (keypath == '') {
       return this;
     }
-    let data = this.get(keypath);
-    if (data != undefined) {
-      return new ChildModel<typeof data>(keypath, this);
-    }
-    return null;
+    return <ChildModel>this.parent.getModel(this.joinKeypath(keypath));
   }
 }

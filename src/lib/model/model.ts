@@ -10,7 +10,7 @@ export class Model<T> extends BaseModel<T> {
   constructor(data: T, key?: string, parent?: Model<any>) {
     super(data, key, parent);
   }
-  
+
   /**
    * return a copy of specific keypath
    */
@@ -32,24 +32,41 @@ export class Model<T> extends BaseModel<T> {
   }
 
   /**
-   * return a new child model which corresponding keypath 
+   * return a new child model which corresponding keypath
    */
-  getModel(keypath: string = ''): ChildModel<any> {
+  getModel(keypath: string = ''): BaseModel<any> {
     if (keypath == '') {
       return this;
     }
-    let data = this.get(keypath);
-    if (data != undefined) {
-      return new ChildModel<typeof data>(keypath, this);
-    }
-    return null;
+    let m = new ChildModel(keypath, this);
+    this.children[keypath] = m;
+    return m;
   }
 
   /**
    * set value
    */
   set(keypath: string, value: any) {
+    if (!keypath || keypath === '') {
+      this.data = value;
+      return;
+    }
 
+    let keypaths = keypath.split('.')
+    let ret = this.data;
+    let last = keypaths.pop();
+    
+    keypaths.forEach((p) => {
+      if(!ret[p]){
+        ret[p] = {}
+      }
+      ret = ret[p];
+    });
+
+    if(ret[last] !== value){
+      this.emit('change', keypath, value, ret[last])
+      ret[last] = value;
+    }
   }
 
   /**
@@ -92,7 +109,7 @@ export class Model<T> extends BaseModel<T> {
 //   shift(): ElementType
 //   {
 //     this.emit('shift')
-//     return 
+//     return
 //   }
 
 //   unshift(): number
