@@ -1,8 +1,9 @@
 import {EventEmitter} from 'events'
 import {BaseModel} from './model/baseModel'
 import {IAdapter} from './adapter'
+import InMemoryAdapter from './adapters/InMemoryAdapter'
+import NullAdapter from './adapters/NullAdapter'
 import * as Promise from 'bluebird';
-
 
 /**
  * Repository is used for storing and retrieving Models
@@ -10,16 +11,18 @@ import * as Promise from 'bluebird';
  * T Model type
  */
 export class Repository<E, M extends BaseModel<E>> extends EventEmitter {
-
   /**
    * keep models in memory and unique
    */
   private identityMap: {
     [id: string]: M,
-    [index: number]: M 
+    [index: number]: M
   } = {};
 
-  constructor(protected adapter: IAdapter<E>, public factory: (entity: E) => M) {
+  constructor(
+    protected adapter: IAdapter<E> = new NullAdapter<E>(),
+    public factory: (entity: E) => M 
+  ) {
     super();
   }
 
@@ -32,7 +35,7 @@ export class Repository<E, M extends BaseModel<E>> extends EventEmitter {
     if (this.identityMap[key]) {
       return Promise.resolve(this.identityMap[key]);
     } else {
-      return this.adapter.findOne(key).then((entity) => {
+      return this.adapter.get(key).then((entity) => {
         let m = this.factory(entity);
         this.identityMap[m.id] = m;
         return m;
@@ -48,8 +51,22 @@ export class Repository<E, M extends BaseModel<E>> extends EventEmitter {
     if (model.id) {
       return this.adapter.update({ _id: model.id }, model.valueOf()).then((data) => model);
     } else {
-      // return this.adapter.insert(model.valueOf()).then((rec) => )
+      return this.adapter.insert(model.valueOf()).then((rec) => {
+        model.id = rec['id'];
+        return model;
+      })
     }
+  }
+  
+  /**
+   * 
+   */
+  create(entity: E):PromiseLike<M>{
+    return this.adapter.insert(entity).then((entity) => {
+      let m = this.factory(entity);
+      this.store(m);
+      return m
+    });
   }
 
   /**

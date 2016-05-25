@@ -64,6 +64,11 @@ export class BaseModel<T> extends EventEmitter {
   get id() {
     return this.data[this.primaryKey];
   }
+  
+  set id(newValue){
+    if(!this.data[this.primaryKey])
+      this.data[this.primaryKey] = newValue
+  }
 
   dispose() {
     this.emit('dispose');

@@ -28,10 +28,20 @@ export class Controller extends EventEmitter {
 			this.subscribe.bind(this)
 			).on('disconnect', this.onexit.bind(this))
 		this.syncConfig = {};
-		this.init(this.params);
-		this.startSync();
 		socket.emit('meta:methods', this.exposedMethods);
-		socket.emit('initialized'); // tell client we are ready
+		let initialized = false;
+		let done = () => {
+			if(!initialized){
+				this.startSync();
+				socket.emit('initialized');
+			}
+		}
+		let ret = this.init(this.params, done);
+		// if init return a promise, automatic call done when promise is resolved
+		if(typeof ret['then'] === 'Function'){
+			ret['then'](done);
+		}
+		// tell client we are ready
 	}
 
 	/**
@@ -39,7 +49,7 @@ export class Controller extends EventEmitter {
    * override by subclass to do initialization
    * @params params any extracted from url
    */
-	init(params: any) {
+	init(params: any, done?: Function) {
 
 	}
 

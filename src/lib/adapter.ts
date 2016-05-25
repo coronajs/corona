@@ -13,6 +13,7 @@ export interface IAdapter<T> {
    */
   count(query, options?): PromiseLike<number>;
   // bulkInsert(record:T[]):PromiseLike<T[]>;
+  get(id:any): PromiseLike<T>;
   /**
    * find out all the matched records
    */
@@ -24,7 +25,7 @@ export interface IAdapter<T> {
   /**
    * update all the matched records
    */
-  update(query, operations, options?): PromiseLike<boolean>;
+  update(query, operations, options?): PromiseLike<number>;
   /**
    * remove all the matched records
    */
