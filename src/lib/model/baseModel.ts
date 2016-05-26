@@ -27,14 +27,14 @@ export class BaseModel<T> extends EventEmitter {
   /**
    * return a copy of specific keypath
    */
-  get(keypath: string): any {
+  get(keypath: string = ''): any {
     throw new Error('Not implemented');
   }
 
   /**
    * return a new child model which corresponding keypath
    */
-  getModel(keypath: string): BaseModel<any> {
+  getModel(keypath: string = ''): BaseModel<any> {
     throw new Error('Not implemented');
   }
 
