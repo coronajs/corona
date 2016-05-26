@@ -18,10 +18,9 @@ export class Repository<E, M extends BaseModel<E>> extends EventEmitter {
     [id: string]: M,
     [index: number]: M
   } = {};
-
   constructor(
-    protected adapter: IAdapter<E> = new NullAdapter<E>(),
-    public factory: (entity: E) => M 
+    public modelClass: new (entity: E) => M,
+    protected adapter: IAdapter<E> = new NullAdapter<E>()
   ) {
     super();
   }
@@ -36,7 +35,7 @@ export class Repository<E, M extends BaseModel<E>> extends EventEmitter {
       return Promise.resolve(this.identityMap[key]);
     } else {
       return this.adapter.get(key).then((entity) => {
-        let m = this.factory(entity);
+        let m = new this.modelClass(entity);
         this.identityMap[m.id] = m;
         return m;
       });
@@ -48,11 +47,14 @@ export class Repository<E, M extends BaseModel<E>> extends EventEmitter {
    * store a model
    */
   store(model: M): PromiseLike<M> {
+    let primaryKey = model.primaryKey;
     if (model.id) {
-      return this.adapter.update({ _id: model.id }, model.valueOf()).then((data) => model);
+      return this.adapter.update({ primaryKey: model.id }, model.valueOf()).then((data) => {
+        return model
+      });
     } else {
       return this.adapter.insert(model.valueOf()).then((rec) => {
-        model.id = rec['id'];
+        model.id = rec[primaryKey];
         return model;
       })
     }
@@ -63,21 +65,28 @@ export class Repository<E, M extends BaseModel<E>> extends EventEmitter {
    */
   create(entity: E):PromiseLike<M>{
     return this.adapter.insert(entity).then((entity) => {
-      let m = this.factory(entity);
-      this.store(m);
-      return m
+      let m = new this.modelClass(entity);
+      this.identityMap[m.id] = m;
+      return m;
     });
   }
 
   /**
-   * delete a model
+   * remove a model from memory
    */
   remove(key: string) {
     let m = this.identityMap[key];
     delete this.identityMap[key];
-    this.emit("delete", key);
+    this.emit("delete", key, m);
     m.dispose();
   }
+  
+  // detach(m: M){
+  //   if(this.identityMap[m.id]){
+  //     delete this.identityMap[m.id];
+  //     this.emit('detach', m.id, m);
+  //   }
+  // }
 
   fetch(key: string, missing: () => M): PromiseLike<M> {
     return this.retrieve(key).then((value) => {

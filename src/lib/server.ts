@@ -1,7 +1,8 @@
 import RouteRecognizer = require('route-recognizer');
 import {Controller} from './controller'
 import * as URL from 'url'
-import * as server from 'socket.io'
+import * as socketio from 'socket.io'
+import * as http from 'http'
 
 interface IController {
   new (socket: SocketIO.Socket): Controller;
@@ -14,8 +15,9 @@ export default function (io: SocketIO.Server, routes: any = {}) {
 
 export class Server {
   private router: RouteRecognizer<IController>;
-  constructor(private io: SocketIO.Server, routes: any) {
-    this.io = io;
+  private io: SocketIO.Server;
+  constructor(routes: any, private server: http.Server ) {
+    this.io = socketio(server);
     this.router = new RouteRecognizer<IController>();
     if (routes) {
       var routesconfig = Object.keys(routes).map(function (i) {
@@ -34,8 +36,10 @@ export class Server {
 
   handleConnection(connection: SocketIO.Socket) {
     var url = URL.parse(connection.handshake.url, true);
+    console.log('new connection', url)
     var routes = this.router.recognize(url.path);
-    if (routes.length > 0) {
+    console.log(routes);
+    if (routes && routes.length > 0) {
       let route = routes[0]
       var controller = new route.handler(connection);
       connection['controller'] = controller;
