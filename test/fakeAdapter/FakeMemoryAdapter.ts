@@ -67,9 +67,9 @@ export class FakeMemoryAdapter<T> implements IAdapter<T>{
   /**
    * update all the matched records
    */
-  update(query, updates): PromiseLike<boolean> {
+  update(query, updates): PromiseLike<number> {
     var self = this;
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<number>((resolve, reject) => {
       var keys = self._findMatchKeys(query);
       keys.map(key => {
         var d = self.data[key];
@@ -79,7 +79,7 @@ export class FakeMemoryAdapter<T> implements IAdapter<T>{
           }
         }
       })
-      resolve(true);
+      resolve(keys.length);
     });
   };
   /**
@@ -94,4 +94,7 @@ export class FakeMemoryAdapter<T> implements IAdapter<T>{
   insert(record: T): PromiseLike<T> {
     throw new Error('Not implemented');
   };
+  get(id: any): PromiseLike<T> {
+    throw new Error('Not implemented');
+  }
 }

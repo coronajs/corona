@@ -87,4 +87,12 @@ describe('Adapter', function(){
       done();
     });
   });
+  it('get by id', function(done){
+    var data = _.cloneDeep(TExam);
+    var adp = new ExamAdapter(data);
+    adp.get(7).then(record => {
+      assert(record.id);
+      done();
+    });
+  });
 });

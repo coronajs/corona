@@ -39,4 +39,13 @@ export class ExamAdapter extends FakeMemoryAdapter<IExam> {
       resolve(record);
     });
   };
+  get(id: any): PromiseLike<IExam> {
+    return new Promise<IExam>((resolve, reject) => {
+      if (this.data[id.toString()]) {
+        resolve(_.cloneDeep(this.data[id.toString()]))
+      } else {
+        resolve(undefined);
+      }
+    });
+  }
 }
