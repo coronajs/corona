@@ -1,9 +1,11 @@
 import {EventEmitter} from 'events'
 import {BaseModel} from './model/baseModel'
+import ModelContainer from './model/ModelContainer'
 import {IAdapter} from './adapter'
 import InMemoryAdapter from './adapters/InMemoryAdapter'
 import NullAdapter from './adapters/NullAdapter'
 import * as Promise from 'bluebird';
+import {clone} from 'lodash'
 
 /**
  * Repository is used for storing and retrieving Models
@@ -96,6 +98,15 @@ export class Repository<E, M extends BaseModel<E>> extends EventEmitter {
       }
       return value;
     });
+  }
+  
+  private container:ModelContainer;
+  toModel():ModelContainer{
+    if(this.container) {
+      return this.container
+    }
+    this.container = new ModelContainer(clone(this.identityMap))
+    return this.container;
   }
 
   /**

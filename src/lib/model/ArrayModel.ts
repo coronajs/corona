@@ -1,13 +1,22 @@
 import {Model} from './model'
+
 /**
  * ArrayModel represent a list of model object
  * this will emit length change events
  */
-export default class ArrayModel<ElementType> extends Model<Array<ElementType>>{
+export default class ArrayModel<ElementType> extends Model<Array<ElementType>> /*implements ArrayLike<ElementType>*/{
   /*
-   */
+   */ 
   constructor(data: Array<ElementType>){
     super(data);
+  }
+  
+  getObject(index: number):ElementType{
+    return this.data[index];
+  }
+  
+  get length(){
+    return this.data.length;
   }
 
   push(element: ElementType): number {
@@ -15,7 +24,7 @@ export default class ArrayModel<ElementType> extends Model<Array<ElementType>>{
     this.emit('change', 'length', this.data.length);
     return this.data.length;
   }
-
+  
   pop(): ElementType
   {
     var el = this.data.pop();

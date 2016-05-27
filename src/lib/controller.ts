@@ -31,14 +31,14 @@ export class Controller extends EventEmitter {
 		socket.emit('meta:methods', this.exposedMethods);
 		let initialized = false;
 		let done = () => {
-			if(!initialized){
+			if (!initialized) {
 				this.startSync();
 				socket.emit('initialized');
 			}
 		}
 		let ret = this.init(this.params, done);
 		// if init return a promise, automatic call done when promise is resolved
-		if(typeof ret['then'] === 'Function'){
+		if (typeof ret['then'] === 'Function') {
 			ret['then'](done);
 		}
 		// tell client we are ready
@@ -59,11 +59,11 @@ export class Controller extends EventEmitter {
 	sync(config: any) {
 		this.syncConfig = config;
 	}
-	
+
 	/**
 	 * 
 	 */
-	expose(...methods:string[]){
+	expose(...methods: string[]) {
 		this.exposedMethods.concat(_.flatten(methods));
 	}
 
@@ -109,11 +109,33 @@ export class Controller extends EventEmitter {
 	/**
    * client ask to subscribe to one of certain object's events
    */
-	subscribe(objid: string, event: string) {
-		var self = this;
-		this[objid].on(event, function (...args: any[]) {
-			self.socket.emit('event', objid, event, args);
+	subscribe(keypath: string, event: string) {
+		this[keypath].on(event, (...args: any[]) => {
+			this.socket.emit('event', keypath, event, args);
 		});
+	}
+
+	/**
+	 * return Model for client
+	 */
+	getModel(keypath: string) {
+		let keypaths = keypath.split('.');
+		if (keypaths.length == 0) {
+			return;
+		}
+		let ret = this[keypaths.shift()];
+		
+		while (keypaths.length > 0) {
+			let p = keypaths.shift();
+			let m = ret[p];
+			if (m instanceof Model) {
+				ret = m.getModel(keypaths.join('.'));
+				break;
+			}
+			ret = m;
+		}
+		
+		return ret.toJSON();
 	}
 
 	/**
