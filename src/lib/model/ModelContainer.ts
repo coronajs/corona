@@ -1,5 +1,5 @@
 import {Model} from './model'
-import {values} from 'lodash'
+import {mapValues} from 'lodash'
 
 export default class ModelContainer extends Model<any>{
   constructor(data: any) {
@@ -41,7 +41,7 @@ export default class ModelContainer extends Model<any>{
   toJSON() {
     return {
       className: "ModelContainer",
-      data: values(this.data).map(m => m.toJSON())
+      data: mapValues(this.data, m => m.toJSON())
     }
   }
 }

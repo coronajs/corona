@@ -50,21 +50,22 @@ export class Model<T> extends BaseModel<T> {
   set(keypath: string, value: any) {
     if (!keypath || keypath === '') {
       this.data = value;
+      this.emit('change', '.', value)
       return;
     }
 
-    let keypaths = keypath.split('.')
+    let keypaths = keypath.split('.');
     let ret = this.data;
     let last = keypaths.pop();
 
     keypaths.forEach((p) => {
-      if(!ret[p]){
+      if (!ret[p]) {
         ret[p] = {}
       }
       ret = ret[p];
     });
 
-    if(ret[last] !== value){
+    if (ret[last] !== value) {
       this.emit('change', keypath, value, ret[last])
       ret[last] = value;
     }
@@ -76,14 +77,14 @@ export class Model<T> extends BaseModel<T> {
    */
   fetch(keypath: string, missing: () => any) {
     let v = this.get(keypath);
-    if(!v){
+    if (!v) {
       v = missing();
       this.set(keypath, v);
     }
     return v;
   }
-  
-  
+
+
   toJSON() {
     return {
       className: 'Model',

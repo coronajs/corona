@@ -114,8 +114,8 @@ export class Controller extends EventEmitter {
    * client ask to subscribe to one of certain object's events
    */
 	subscribe(keypath: string, event: string) {
-		this[keypath].on(event, (...args: any[]) => {
-			this.socket.emit('event', keypath, event, args);
+		this.getModel(keypath).on(event, (...args: any[]) => {
+			this.socket.emit('event', keypath, event, ...args);
 		});
 	}
 
@@ -130,16 +130,22 @@ export class Controller extends EventEmitter {
 		let ret = this[keypaths.shift()];
 
 		while (keypaths.length > 0) {
-			let p = keypaths.shift();
-			let m = ret[p];
-			if (m instanceof Model) {
-				ret = m.getModel(keypaths.join('.'));
-				break;
+			if (ret instanceof Model) {
+				return ret.getModel(keypaths.join('.'));
 			}
-			ret = m;
+			let p = keypaths.shift();
+			if(ret[p]){
+				ret = ret[p];
+			} else {
+				return;
+			}
 		}
 
-		return ret.toJSON();
+		return ret;
+	}
+	
+	getModelSpec(keypath:string){
+		return this.getModel(keypath).toJSON()
 	}
 
 	/**
