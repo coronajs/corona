@@ -36,14 +36,11 @@ export class Server {
 
   handleConnection(connection: SocketIO.Socket) {
     var url = URL.parse(connection.handshake.url, true);
-    console.log('new connection', url)
     var routes = this.router.recognize(url.path);
-    console.log(routes);
     if (routes && routes.length > 0) {
       let route = routes[0]
       var controller = new route.handler(connection);
       connection['controller'] = controller;
-      controller.init(route.params);
     } else {
       connection.disconnect();
     }

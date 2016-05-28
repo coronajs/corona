@@ -7,16 +7,16 @@ import * as Promise from 'bluebird'
  */
 export default class NullAdapter<T> implements IAdapter<T>{
   private seqId = 0;
-  
+
   get(id: string | number): PromiseLike<T> {
-    return 
+    return
   }
-  
+
   /**
    * insert a record
    */
   insert(record: T): PromiseLike<T> {
-    record['id'] = this.seqId++;
+    record['_id'] = this.seqId++;
     return Promise.resolve(record);
   }
   /**
@@ -42,7 +42,7 @@ export default class NullAdapter<T> implements IAdapter<T>{
    * update all the matched records
    */
   update(query, operations, options?): PromiseLike<number> {
-    
+
     return Promise.resolve(0);
   }
   /**
@@ -50,6 +50,6 @@ export default class NullAdapter<T> implements IAdapter<T>{
    */
   remove(query, options?): PromiseLike<number> {
     return Promise.resolve(0);
-  }  
-  
+  }
+
 }

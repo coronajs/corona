@@ -9,7 +9,7 @@ export class BaseModel<T> extends EventEmitter {
   protected root: BaseModel<any>;
   protected presisted: boolean = true;
   protected changed: boolean = false;
-  public primaryKey: string | number = '_id';
+  public primaryKey: string = '_id';
 
   constructor(data: T, key?: string, parent?: BaseModel<any>) {
     super();
@@ -64,14 +64,14 @@ export class BaseModel<T> extends EventEmitter {
   get id() {
     return this.data[this.primaryKey];
   }
-  
+
   set id(newValue){
     if(!this.data[this.primaryKey])
       this.data[this.primaryKey] = newValue
   }
-  
+
   private isDisposed:boolean = false;
-  
+
   dispose() {
     if(!this.isDisposed){
       this.emit('dispose', this);

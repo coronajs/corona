@@ -28,19 +28,23 @@ export class Controller extends EventEmitter {
 			this.subscribe.bind(this)
 			).on('disconnect', this.onexit.bind(this))
 		this.syncConfig = {};
-		socket.emit('meta:methods', this.exposedMethods);
+
 		let initialized = false;
 		let done = () => {
 			if (!initialized) {
-				this.startSync();
+				initialized = true;
+				socket.emit('meta:methods', this.exposedMethods);
 				socket.emit('initialized');
+				this.startSync();
 			}
 		}
 		let ret = this.init(this.params, done);
 		// if init return a promise, automatic call done when promise is resolved
-		if (typeof ret['then'] === 'Function') {
-			ret['then'](done);
-		}
+		// if (ret && typeof ret['then'] === 'Function') {
+		// 	console.log('a promise')
+
+		// 	ret.final(done);
+		// }
 		// tell client we are ready
 	}
 
@@ -49,8 +53,8 @@ export class Controller extends EventEmitter {
    * override by subclass to do initialization
    * @params params any extracted from url
    */
-	init(params: any, done?: Function) {
-
+	init(params: any, done?: Function):PromiseLike<any> {
+		return;
 	}
 
 	/**
@@ -61,10 +65,10 @@ export class Controller extends EventEmitter {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	expose(...methods: string[]) {
-		this.exposedMethods.concat(_.flatten(methods));
+		this.exposedMethods = this.exposedMethods.concat(_.flatten(methods));
 	}
 
 	/**
@@ -124,7 +128,7 @@ export class Controller extends EventEmitter {
 			return;
 		}
 		let ret = this[keypaths.shift()];
-		
+
 		while (keypaths.length > 0) {
 			let p = keypaths.shift();
 			let m = ret[p];
@@ -134,7 +138,7 @@ export class Controller extends EventEmitter {
 			}
 			ret = m;
 		}
-		
+
 		return ret.toJSON();
 	}
 

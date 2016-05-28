@@ -61,15 +61,15 @@ export class Repository<E, M extends BaseModel<E>> extends EventEmitter {
       })
     }
   }
-  
+
   /**
-   * 
+   *
    */
   create(entity: E):PromiseLike<M>{
     return this.adapter.insert(entity).then((entity) => {
       let m = new this.modelClass(entity);
       this.identityMap[m.id] = m;
-      return m;
+      return Promise.resolve(m);
     });
   }
 
@@ -82,7 +82,7 @@ export class Repository<E, M extends BaseModel<E>> extends EventEmitter {
     this.emit("delete", key, m);
     m.dispose();
   }
-  
+
   // detach(m: M){
   //   if(this.identityMap[m.id]){
   //     delete this.identityMap[m.id];
@@ -99,7 +99,7 @@ export class Repository<E, M extends BaseModel<E>> extends EventEmitter {
       return value;
     });
   }
-  
+
   private container:ModelContainer;
   toModel():ModelContainer{
     if(this.container) {
