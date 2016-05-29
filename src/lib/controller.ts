@@ -147,6 +147,10 @@ export class Controller extends EventEmitter {
 	getModelSpec(keypath:string){
 		return this.getModel(keypath).toJSON()
 	}
+	
+	getMultiModelSpec(keypaths:string[]){
+		return keypaths.map(keypath => this.getModel(keypath).toJSON())
+	}
 
 	/**
    * called when the client disconnect

@@ -87,6 +87,7 @@ export class Model<T> extends BaseModel<T> {
 
   toJSON() {
     return {
+      id: this.id,
       className: 'Model',
       data: this.data
     }
