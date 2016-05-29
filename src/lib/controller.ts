@@ -53,7 +53,7 @@ export class Controller extends EventEmitter {
    * override by subclass to do initialization
    * @params params any extracted from url
    */
-	init(params: any, done?: Function):PromiseLike<any> {
+	init(params: any, done?: Function): PromiseLike<any> {
 		return;
 	}
 
@@ -134,7 +134,7 @@ export class Controller extends EventEmitter {
 				return ret.getModel(keypaths.join('.'));
 			}
 			let p = keypaths.shift();
-			if(ret[p]){
+			if (ret[p]) {
 				ret = ret[p];
 			} else {
 				return;
@@ -143,13 +143,13 @@ export class Controller extends EventEmitter {
 
 		return ret;
 	}
-	
-	getModelSpec(keypath:string){
+
+	getModelSpec(keypath: string) {
 		return this.getModel(keypath).toJSON()
 	}
-	
-	getMultiModelSpec(keypaths:string[]){
-		return keypaths.map(keypath => this.getModel(keypath).toJSON())
+
+	getMultiModelSpec(keypaths: string[]) {
+		return _.zipObject(keypaths, keypaths.map(keypath => this.getModel(keypath).toJSON()))
 	}
 
 	/**

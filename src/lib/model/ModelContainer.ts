@@ -40,6 +40,7 @@ export default class ModelContainer extends Model<any>{
 
   toJSON() {
     return {
+      id: null,
       className: "ModelContainer",
       data: mapValues(this.data, m => m.toJSON())
     }
