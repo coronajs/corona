@@ -30,7 +30,7 @@ export default class ModelContainer extends Model<any>{
   
   add(m: Model<any>) {
     this.data[m.id] = m;
-    this.emit('add', m.id);
+    this.emit('add', m.toJSON());
   }
 
   remove(m: Model<any>) {
