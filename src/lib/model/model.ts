@@ -18,17 +18,18 @@ export class Model<T> extends BaseModel<T> {
     if (keypath == '') {
       return _.cloneDeep(this.data);
     }
-    let keypaths = keypath.split('.');
-    let ret: any = this.data;
-    for (var i = 0; i < keypaths.length; i++) {
-      keypath = keypaths[i];
-      if (ret.hasOwnProperty(keypath)) {
-        ret = ret[keypath];
-      } else {
-        return undefined;
-      }
-    }
-    return _.cloneDeep(ret);
+    return _.cloneDeep(_.get(this.data, keypath));
+    // let keypaths = keypath.split('.');
+    // let ret: any = this.data;
+    // for (var i = 0; i < keypaths.length; i++) {
+    //   keypath = keypaths[i];
+    //   if (ret.hasOwnProperty(keypath)) {
+    //     ret = ret[keypath];
+    //   } else {
+    //     return undefined;
+    //   }
+    // }
+    // return _.cloneDeep(ret);
   }
 
   /**
