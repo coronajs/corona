@@ -16,27 +16,27 @@ export default function (io: SocketIO.Server, routes: any = {}) {
 export class Server {
   private router: RouteRecognizer<IController>;
   private io: SocketIO.Server;
-  constructor(routes: any, private server: http.Server ) {
-    this.io = socketio(server);
+  constructor(routes: any, private server: http.Server, opts: SocketIO.ServerOptions = {}) {
+    opts['path'] = '/corona';
+    this.io = socketio(server, opts);
     this.router = new RouteRecognizer<IController>();
-    if (routes) {
-      var routesconfig = Object.keys(routes).map(function (i) {
-        return { path: i, handler: routes[i] };
-      })
 
-      this.router.add(routesconfig);
+    // add route
+    if (routes) {
+      Object.keys(routes).map((k) => {
+        this.route(k, routes[k]);
+      });
     }
 
-    this.io.on('connection', this.handleConnection.bind(this))
   }
 
   route(path: string, ctrl: IController) {
-    this.router.add([{ path: path, handler: ctrl }])
+    this.router.add([{ path: path, handler: ctrl }]);
+    this.io.of(path).on('connection', this.handleConnection.bind(this));
   }
 
   handleConnection(connection: SocketIO.Socket) {
-    var url = URL.parse(connection.handshake.url, true);
-    var routes = this.router.recognize(url.path);
+    var routes = this.router.recognize(connection.nsp.name);
     if (routes && routes.length > 0) {
       let route = routes[0]
       var controller = new route.handler(connection);
