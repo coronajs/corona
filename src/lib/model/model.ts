@@ -76,7 +76,7 @@ export class Model<T> extends BaseModel<T> {
    * retrieve value, and if not exists then invoke callback to calculate value
    * and save to the keypath
    */
-  fetch(keypath: string, missing: () => any) {
+  fetch(keypath: string, missing: Function) {
     let v = this.get(keypath);
     if (!v) {
       v = missing();

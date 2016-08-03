@@ -37,5 +37,4 @@ dist/
 build/
 
 # Typescript
-tsdist/
 jsconfig.json

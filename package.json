@@ -1,6 +1,6 @@
 {
   "name": "corona",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "a realtime framework built in nodejs",
   "main": "tsdist/src/index.js",
   "dependencies": {

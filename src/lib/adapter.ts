@@ -13,7 +13,7 @@ export interface IAdapter<T> {
    */
   count(query, options?): PromiseLike<number>;
   // bulkInsert(record:T[]):PromiseLike<T[]>;
-  get(id:any): PromiseLike<T>;
+  get(id:string|number): PromiseLike<T>;
   /**
    * find out all the matched records
    */
