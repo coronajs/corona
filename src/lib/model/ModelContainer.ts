@@ -1,7 +1,8 @@
+import {IModel} from './baseModel'
 import {Model} from './model'
 import {mapValues} from 'lodash'
 
-export default class ModelContainer extends Model<any>{
+export default class ModelContainer<M extends IModel<any>> extends Model<any>{
   constructor(data: any) {
     if (data instanceof Array) {
       let d = data;
@@ -13,7 +14,7 @@ export default class ModelContainer extends Model<any>{
     super(data);
   }
   
-  getModel(keypath:string = ''):Model<any>{
+  getModel(keypath:string = ''):M|this{
     if(keypath == ''){
       return this;
     }
@@ -28,12 +29,12 @@ export default class ModelContainer extends Model<any>{
     }
   }
   
-  add(m: Model<any>) {
+  add(m: M) {
     this.data[m.id] = m;
     this.emit('add', m.id, m.toJSON());
   }
 
-  remove(m: Model<any>) {
+  remove(m: M) {
     delete this.data[m.id];
     this.emit('remove', m.id);
   }
